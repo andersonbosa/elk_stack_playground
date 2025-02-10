@@ -6,16 +6,11 @@ services:
     environment:
       - discovery.type=single-node
       - ELASTIC_PASSWORD=changeme # username is: elastic
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m # Set the JVM heap size: https://www.elastic.co/guide/en/elasticsearch/reference/current/advanced-configuration.html#set-jvm-heap-size
     ports:
       - "9200:9200"
     networks:
       - elk-network
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:9200"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 5
 
   kibana:
     image: kibana:8.17.1
@@ -23,32 +18,8 @@ services:
       - "5601:5601"
     networks:
       - elk-network
-    # depends_on:
-    #   elasticsearch:
-    #     condition: service_healthy
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:5601"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 5
-
-
-  # logstash:
-  #   image: logstash:8.17.1
-  #   ports:
-  #     - "5044:5044"
-  #   volumes:
-  #     - ./logstash/pipeline:/usr/share/logstash/pipeline
-  #   networks:
-  #     - elk-network
-  #   depends_on:
-  #     elasticsearch:
-  #       condition: service_healthy
-  #   healthcheck:
-  #     test: ["CMD", "curl", "-f", "http://localhost:9600"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 5
+    
+  # TODO: add logstash
 
 networks:
   elk-network:
