@@ -1,0 +1,55 @@
+
+services:
+  
+  elasticsearch:
+    image: elasticsearch:8.17.1
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=changeme # username is: elastic
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    networks:
+      - elk-network
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:9200"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 5
+
+  kibana:
+    image: kibana:8.17.1
+    ports:
+      - "5601:5601"
+    networks:
+      - elk-network
+    # depends_on:
+    #   elasticsearch:
+    #     condition: service_healthy
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:5601"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 5
+
+
+  # logstash:
+  #   image: logstash:8.17.1
+  #   ports:
+  #     - "5044:5044"
+  #   volumes:
+  #     - ./logstash/pipeline:/usr/share/logstash/pipeline
+  #   networks:
+  #     - elk-network
+  #   depends_on:
+  #     elasticsearch:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ["CMD", "curl", "-f", "http://localhost:9600"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+
+networks:
+  elk-network:
+    driver: bridge
